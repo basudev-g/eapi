@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreReviewRequest;
 use App\Http\Requests\UpdateReviewRequest;
+use App\Http\Resources\Product\ProductResource;
 use App\Http\Resources\Review\ReviewCollection;
 use App\Models\Product;
 use App\Models\Review;
@@ -39,7 +40,7 @@ class ReviewController extends Controller
      */
     public function show(Product $product, Review $review)
     {
-        return $review->product;
+        return new ProductResource($review->product);
     }
 
     /**
