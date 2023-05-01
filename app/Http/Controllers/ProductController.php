@@ -2,15 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\ProductNotBelongsToUser;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\Product\ProductCollection;
 use App\Http\Resources\Product\ProductResource;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("auth:api")->except(['index', 'show']);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -39,6 +45,7 @@ class ProductController extends Controller
         $product->price = $request->price;
         $product->stock = $request->stock;
         $product->discount = $request->discount;
+        $product->user_id = $request->user_id;
 
         $product->save();
         return response([
@@ -67,6 +74,7 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
+        $this->productUserCheck($product);
         $request['detail'] = $request->description;
         unset($request['description']);
         $product->update($request->all());
@@ -80,7 +88,15 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        $this->productUserCheck($product);
         $product->delete();
         return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function productUserCheck($product)
+    {
+        if (Auth::id() !== $product->user_id) {
+            throw new ProductNotBelongsToUser();
+        }
     }
 }

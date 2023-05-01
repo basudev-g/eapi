@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('price');
             $table->integer('stock');
             $table->integer('discount');
+            $table->unsignedBigInteger('user_id')->index();
             $table->timestamps();
         });
     }
