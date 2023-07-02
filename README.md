@@ -16,3 +16,7 @@ Steps to install this project.
     4. (Update product) http://localhost:8000/api/products/25
     5. (All reviews for a product) http://localhost:8000/api/products/25/reviews
     6. (Show a reviewed product details) http://localhost:8000/api/products/25/reviews/3
+
+5. To Secure data transmission by API you need to install Laravel Passport Package.
+    You need to run this command to create grant token: "php artisan passport:install".
+    Passport documentation is here https://laravel.com/docs/10.x/passport#installation
